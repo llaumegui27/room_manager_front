@@ -34,29 +34,24 @@ class _EventPageState extends State<EventPage> {
   ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Connexion/Inscription"),
-      ),
-      body: Center(
-        child: ListView.builder(
-          itemCount: rooms.length,
-          itemBuilder: (context, index) {
-            final room = rooms[index];
-            final name = room['name'];
-            final heure = room['heure'];
-            final matiere = room['matiere'];
-            return Card(
-              child: ListTile(
-                leading: Image.asset("assets/images/school-logo.png"),
-                title: Text("$name"),
-                subtitle: Text('$heure - $matiere'),
-                trailing: Icon(Icons.more_vert),
-              ),
-            );
-          },
+    return Center(
+      child: ListView.builder(
+        itemCount: rooms.length,
+        itemBuilder: (context, index) {
+          final room = rooms[index];
+          final name = room['name'];
+          final heure = room['heure'];
+          final matiere = room['matiere'];
+          return Card(
+            child: ListTile(
+              leading: Image.asset("assets/images/school-logo.png"),
+              title: Text("$name"),
+              subtitle: Text('$heure - $matiere'),
+              trailing: Icon(Icons.info),
+            ),
+          );
+        },
 
-        ),
       ),
     );
   }
