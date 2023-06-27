@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:room_manager/pages/login_page.dart';
 
-import 'event_page.dart';
 class HomePage extends StatelessWidget {
   const HomePage({
     super.key,
@@ -19,10 +19,6 @@ class HomePage extends StatelessWidget {
               const ColorFilter.mode(Colors.blue, BlendMode.srcIn),
             ),
             const Text(
-              "Room Manager",
-              style: TextStyle(fontSize: 42, fontFamily: 'Poppins'),
-            ),
-            const Text(
               "Application de gestion de salles de classes.",
               style: TextStyle(fontSize: 24),
               textAlign: TextAlign.center,
@@ -31,17 +27,17 @@ class HomePage extends StatelessWidget {
             ElevatedButton(
                 style: ButtonStyle(
                     padding: MaterialStatePropertyAll(EdgeInsets.all(10)),
-                    backgroundColor: MaterialStatePropertyAll(Colors.green)
+                    backgroundColor: MaterialStatePropertyAll(Colors.blue)
                 ),
                 onPressed: () {
                   Navigator.push(
                       context,
                       PageRouteBuilder(
-                          pageBuilder:( _, __, ___) => EventPage()
+                          pageBuilder:( _, __, ___) => LoginPage()
                       )
                   );
                 },
-                child: const Text("Page de connexion",
+                child: const Text("Se connecter/S'inscrire",
                     style: TextStyle(
                         fontSize: 20
                     )))

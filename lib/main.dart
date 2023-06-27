@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:room_manager/pages/event_page.dart';
 import 'package:room_manager/pages/home_page.dart';
+import 'package:room_manager/pages/login_page.dart';
 import 'package:room_manager/pages/reservation_page.dart';
 
 void main() {
@@ -33,13 +34,13 @@ class _MyAppState extends State<MyApp> {
           title: [
             Text("Accueil"),
             Text("Liste des salles"),
-            Text("Demande de réservation de salles")
+            Text("Demande de réservation de salles"),
           ][_currentIndex],
         ),
         body: [   //liste de pages
           HomePage(),
           EventPage(),
-          ReservationPage()
+          ReservationPage(),
         ][_currentIndex],
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
@@ -64,6 +65,7 @@ class _MyAppState extends State<MyApp> {
             ),
           ],
         ),
+
       ),
     );
   }
