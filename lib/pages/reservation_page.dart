@@ -1,5 +1,7 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ReservationPage extends StatefulWidget {
   const ReservationPage({Key? key}) : super(key: key);
@@ -10,7 +12,12 @@ class ReservationPage extends StatefulWidget {
 
 class _ReservationPageState extends State<ReservationPage> {
 
+  List<dynamic> rooms = [];
   final _formKey = GlobalKey<FormState>();
+
+  static const headers = {
+    'Content-Type': 'application/json'
+  };
 
   final commentaireController = TextEditingController();
   String selectSalle = '1';
@@ -23,6 +30,26 @@ class _ReservationPageState extends State<ReservationPage> {
     commentaireController.dispose();
   }
 
+  @override
+  void initState() {
+    super.initState();
+    fetchRooms();
+  }
+
+  Future<void> fetchRooms() async {
+    final url = Uri.parse("http://10.0.2.2:8000/rooms");
+    final response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      final roomsData = jsonDecode(response.body);
+      setState(() {
+        rooms = roomsData;
+      });
+      print('Récupération des salles réussie : $roomsData');
+    } else {
+      // Gérer l'erreur de la requête
+      print('Erreur : ${response.body}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,21 +62,20 @@ class _ReservationPageState extends State<ReservationPage> {
               Container(
                 margin: const EdgeInsets.only(bottom: 10),
                 child: DropdownButtonFormField(
-                    items: const [
-                      DropdownMenuItem(value: '1', child: Text("Salle Experience")),
-                      DropdownMenuItem(value: '2', child: Text("Salle Tech")),
-                      DropdownMenuItem(value: '3', child: Text("Salle Contest")),
-                      DropdownMenuItem(value: '4', child: Text("Salle Pro")),
-                    ],
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder()
-                    ),
-                    value: selectSalle,
-                    onChanged: (value){
-                      setState(() {
-                        selectSalle = value!;
-                      });
-                    }
+                  items: rooms.map<DropdownMenuItem<String>>((room) {
+                    final id = room['id'].toString();
+                    final name = room['name'];
+                    return DropdownMenuItem(value: id, child: Text(name));
+                  }).toList(),
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                  ),
+                  value: selectSalle,
+                  onChanged: (value) {
+                    setState(() {
+                      selectSalle = value.toString();
+                    });
+                  },
                 ),
               ),
               Container(
