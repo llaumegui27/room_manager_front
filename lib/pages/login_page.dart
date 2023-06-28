@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:room_manager/pages/sign_in_page.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -9,6 +11,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  static const headers = {
+    'Content-Type': 'application/json'
+  };
+  
   final _formKey = GlobalKey<FormState>();
 
   final mailController = TextEditingController();
@@ -82,15 +89,44 @@ class _LoginPageState extends State<LoginPage> {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           final mail = mailController.text;
                           final password = passwordController.text;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Connexion...")),
+
+                          final url = Uri.parse("http://10.0.2.2:8000/login");
+                          var body = jsonEncode({"mail": mail, "password": password});
+                          final response = await http.post(
+                            url,
+                            headers: headers,
+                            body: body,
                           );
+                          print('Response status code: ${response.statusCode}');
+                          print('Response body: ${response.body}');
+
+                          if (response.statusCode == 200) {
+                            final jsonResponse = jsonDecode(response.body);
+                            final bool success = jsonResponse['etat'];
+                            final String message = jsonResponse['message'];
+
+                            if (success) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("Connexion réussie.")),
+                              );
+                              print("Connexion réussi de $mail avec le mdp $password");
+                              // Effectuez d'autres actions, par exemple, naviguez vers une autre page
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(message)),
+                              );
+                            }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Utilisateur introuvable.")),
+                            );
+                            print("Connexion échoué $mail avec le mdp $password");
+                          }
                           FocusScope.of(context).requestFocus(FocusNode());
-                          print("Connexion de $mail avec le mdp $password");
                         }
                       },
                       child: Text("Se connecter"),
