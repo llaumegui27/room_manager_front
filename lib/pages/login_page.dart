@@ -101,8 +101,8 @@ class _LoginPageState extends State<LoginPage> {
                             headers: headers,
                             body: body,
                           );
-                          print('Response status code: ${response.statusCode}');
-                          print('Response body: ${response.body}');
+                          // print('Response status code: ${response.statusCode}');
+                          // print('Response body: ${response.body}');
 
                           if (response.statusCode == 200) {
                             final jsonResponse = jsonDecode(response.body);

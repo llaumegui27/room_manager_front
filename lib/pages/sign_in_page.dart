@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -8,6 +10,11 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+
+  static const headers = {
+    'Content-Type': 'application/json'
+  };
+
   final _formKey = GlobalKey<FormState>();
 
   final nameController = TextEditingController();
@@ -123,20 +130,52 @@ class _SignInPageState extends State<SignInPage> {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           final name = nameController.text;
                           final mail = mailController.text;
                           final password = passwordController.text;
-                          final repeatPassword =
-                              repeatPasswordController.text;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Inscription...")),
+                          final repeatPassword = repeatPasswordController.text;
+
+                          final url = Uri.parse("http://10.0.2.2:8000/add-user");
+                          var body = jsonEncode(
+                              {
+                                "name": name,
+                                "mail": mail,
+                                "password": password,
+                                "teacher": 1,
+                                "admin": 0,
+                                "super_admin": 0
+                              }
+                              );
+                          final response = await http.post(
+                            url,
+                            headers: headers,
+                            body: body,
                           );
+                          if (response.statusCode == 200) {
+                            final jsonResponse = jsonDecode(response.body);
+                            final bool success = jsonResponse['etat'];
+                            final String message = jsonResponse['message'];
+
+                            if (success) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("Inscription réussie.")),
+                              );
+                              print("Connexion réussi de $mail avec le mdp $password");
+                              // Effectuez d'autres actions, par exemple, naviguez vers une autre page
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(message)),
+                              );
+                            }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Inscription échoué.")),
+                            );
+                            print("Inscriptio échoué $name, $mail avec le mdp $password");
+                          }
                           FocusScope.of(context).requestFocus(FocusNode());
-                          print("Inscription de $name");
-                          print("Avec l'email : $mail");
-                          print("Et le mdp : $password et $repeatPassword");
                         }
                       },
                       child: Text("S'inscrire"),
