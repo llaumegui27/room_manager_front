@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:room_manager/main.dart';
 import 'package:room_manager/pages/sign_in_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'user_manager.dart';
+import 'event_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -15,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   static const headers = {
     'Content-Type': 'application/json'
   };
-  
+
   final _formKey = GlobalKey<FormState>();
 
   final mailController = TextEditingController();
@@ -31,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
         title: Text("Connexion"),
       ),
       body: Container(
@@ -101,20 +104,25 @@ class _LoginPageState extends State<LoginPage> {
                             headers: headers,
                             body: body,
                           );
-                          // print('Response status code: ${response.statusCode}');
-                          // print('Response body: ${response.body}');
 
                           if (response.statusCode == 200) {
                             final jsonResponse = jsonDecode(response.body);
                             final bool success = jsonResponse['etat'];
                             final String message = jsonResponse['message'];
+                            final int id = jsonResponse['id'];
 
                             if (success) {
+                              UserManager().userId = id; // Stocker l'ID de l'utilisateur
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text("Connexion réussie.")),
                               );
-                              print("Connexion réussi de $mail avec le mdp $password");
-                              // Effectuez d'autres actions, par exemple, naviguez vers une autre page
+                              print("Connexion réussie de $mail avec le mot de passe $password et l'id : $id");
+
+                              // Naviguer vers la page EventPage
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => MyApp(initialIndex: 1)),
+                              );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(message)),
@@ -124,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text("Utilisateur introuvable.")),
                             );
-                            print("Connexion échoué $mail avec le mdp $password");
+                            print("Connexion échouée $mail avec le mot de passe $password");
                           }
                           FocusScope.of(context).requestFocus(FocusNode());
                         }

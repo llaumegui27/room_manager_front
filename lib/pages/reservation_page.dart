@@ -2,6 +2,7 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'user_manager.dart';
 
 class ReservationPage extends StatefulWidget {
   const ReservationPage({Key? key}) : super(key: key);
@@ -19,10 +20,11 @@ class _ReservationPageState extends State<ReservationPage> {
     'Content-Type': 'application/json'
   };
 
-  final commentaireController = TextEditingController();
   String selectSalle = '1';
   DateTime selectedDateDebut = DateTime.now();
   DateTime selectedDateFin = DateTime.now();
+  final commentaireController = TextEditingController();
+
 
   @override
   void dispose() {
@@ -34,6 +36,8 @@ class _ReservationPageState extends State<ReservationPage> {
   void initState() {
     super.initState();
     fetchRooms();
+    print("L'id de mon user : ");
+    print(UserManager().userId);
   }
 
   Future<void> fetchRooms() async {

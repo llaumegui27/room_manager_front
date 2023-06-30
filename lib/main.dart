@@ -10,10 +10,12 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key, this.initialIndex = 1}) : super(key: key);
+  final int initialIndex;  // Ajout du paramètre initialIndex
 
   @override
   State<MyApp> createState() => _MyAppState();
+
 }
 
 class _MyAppState extends State<MyApp> {
@@ -21,9 +23,25 @@ class _MyAppState extends State<MyApp> {
   int _currentIndex = 0;
 
   setCurrentIndex(int index) {
+    print(index);
+    print(_currentIndex);
     setState(() {
-      _currentIndex = index;
+      if (widget.initialIndex != _currentIndex) {
+        print(index);
+        _currentIndex = widget.initialIndex;
+      } else {
+        print(index);
+        _currentIndex = index;
+      }
+      print(_currentIndex);
     });
+  }
+
+  @override
+  void initState() {
+    setCurrentIndex(_currentIndex);
+    super.initState();
+    print("l'index : $_currentIndex");
   }
 
   @override
@@ -32,9 +50,9 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         appBar: AppBar(
           title: [
-            Text("Accueil"),
-            Text("Liste des salles"),
-            Text("Demande de réservation de salles"),
+            const Text("Accueil"),
+            const Text("Liste des salles"),
+            const Text("Demande de réservation de salles"),
           ][_currentIndex],
         ),
         body: [   //liste de pages
@@ -70,9 +88,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
-
-
-
-
-

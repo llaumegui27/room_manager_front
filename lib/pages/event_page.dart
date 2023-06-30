@@ -58,7 +58,7 @@ class _EventPageState extends State<EventPage> {
               leading: Image.asset("assets/images/school-logo.png"),
               title: Text("$name - $subject"),
               subtitle: Text(
-                  "Nombre de places : $places - Nombre de participants : $participants"),
+                  "Nombre de places : $places - Participants : $participants"),
               trailing: Icon(Icons.info),
             ),
           );
