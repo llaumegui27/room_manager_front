@@ -24,6 +24,7 @@ class _ReservationPageState extends State<ReservationPage> {
   DateTime selectedDateDebut = DateTime.now();
   DateTime selectedDateFin = DateTime.now();
   final commentaireController = TextEditingController();
+  final idUser = UserManager().userId;
 
 
   @override
@@ -94,7 +95,6 @@ class _ReservationPageState extends State<ReservationPage> {
                   ),
                   mode: DateTimeFieldPickerMode.dateAndTime,
                   autovalidateMode: AutovalidateMode.always,
-                  validator: (e) => (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
                   onDateSelected: (DateTime value) {
                     setState(() {
                       selectedDateDebut = value;
@@ -114,7 +114,6 @@ class _ReservationPageState extends State<ReservationPage> {
                   ),
                   mode: DateTimeFieldPickerMode.dateAndTime,
                   autovalidateMode: AutovalidateMode.always,
-                  validator: (e) => (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
                   onDateSelected: (DateTime value) {
                     setState(() {
                       selectedDateFin = value;
@@ -144,13 +143,51 @@ class _ReservationPageState extends State<ReservationPage> {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                    onPressed: (){
+                    onPressed: () async {
                       if(_formKey.currentState!.validate()) {
+                        final room = selectSalle;
+                        final debut = selectedDateDebut;
+                        final fin = selectedDateFin;
                         final commentaire = commentaireController.text;
+                        final etat = 0;
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Envoi en cours..."))
-                        );  //permet de fermer le clavier à l'envoi du form
+                        final url = Uri.parse("http://10.0.2.2:8000/add-reservation");
+                        var body = jsonEncode(
+                            {
+                              "date_heure_debut": debut == null ? null : debut.toIso8601String(),
+                              "date_heure_fin": fin == null ? null : fin.toIso8601String(),
+                              "etat": 0,
+                              "commentaire": commentaire,
+                              "id_user_id": idUser,
+                              "id_room_id": room
+                            });
+                        final response = await http.post(
+                          url,
+                          headers: headers,
+                          body: body,
+                        );
+                        if (response.statusCode == 200) {
+                          final jsonResponse = jsonDecode(response.body);
+                          final bool success = jsonResponse['etat'];
+                          final String message = jsonResponse['message'];
+
+                          if (success) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Réservation enregistré.")),
+                            );
+                            print("Réservation enregistré");
+                            // Effectuez d'autres actions, par exemple, naviguez vers une autre page
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(message)),
+                            );
+                          }
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Réservation échouée.")),
+                          );
+                          print("Réservation échouée");
+                        }
                         FocusScope.of(context).requestFocus(FocusNode());
 
                         print("L'id de la salle : $selectSalle");
