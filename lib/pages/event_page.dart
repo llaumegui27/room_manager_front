@@ -44,28 +44,58 @@ class _EventPageState extends State<EventPage> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: isLoading
-          ? CircularProgressIndicator()
-          : ListView.builder(
-        itemCount: rooms.length,
-        itemBuilder: (context, index) {
-          final room = rooms[index];
-          final name = room['name'];
-          final subject = room['subject'];
-          final places = room['places'];
-          final participants = room['participants'];
-
-          return Card(
-            child: ListTile(
-              leading: Image.asset("assets/images/school-logo.png"),
-              title: Text("$name - $subject"),
-              subtitle: Text(
-                  "Nombre de places : $places - Participants : $participants"),
-              trailing: Icon(Icons.info),
+      child: Column(
+        children: [
+          if (UserManager().isAdmin == true)
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CreateRoomPage()),
+                  );
+                },
+                child: Text(
+                  'Ajouter une salle',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
             ),
-          );
-        },
+          Expanded(
+            child: isLoading
+                ? Center(
+              child: SizedBox(
+                width: 40.0, // Définir la largeur du SizedBox
+                height: 40.0, // Définir la hauteur du SizedBox
+                child: CircularProgressIndicator(),
+              ),
+            )
+                : ListView.builder(
+              itemCount: rooms.length,
+              itemBuilder: (context, index) {
+                final room = rooms[index];
+                final name = room['name'];
+                final subject = room['subject'];
+                final places = room['places'];
+                final participants = room['participants'];
+
+                return Card(
+                  child: ListTile(
+                    leading: Image.asset("assets/images/school-logo.png"),
+                    title: Text("$name - $subject"),
+                    subtitle: Text(
+                        "Nombre de places : $places - Participants : $participants"),
+                    trailing: Icon(Icons.info),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
+
+
   }
 }

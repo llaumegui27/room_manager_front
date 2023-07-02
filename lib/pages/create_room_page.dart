@@ -10,6 +10,12 @@ class CreateRoomPage extends StatefulWidget {
 class _CreateRoomPageState extends State<CreateRoomPage> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Ajouter une salle"),
+        ),
+    body: Container(),
+    );
+
   }
 }
