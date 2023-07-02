@@ -110,18 +110,20 @@ class _LoginPageState extends State<LoginPage> {
                             final bool success = jsonResponse['etat'];
                             final String message = jsonResponse['message'];
                             final int id = jsonResponse['id'];
+                            final bool admin = jsonResponse['admin'];
 
                             if (success) {
                               UserManager().userId = id; // Stocker l'ID de l'utilisateur
+                              UserManager().isAdmin = admin;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text("Connexion réussie.")),
                               );
-                              print("Connexion réussie de $mail avec le mot de passe $password et l'id : $id");
+                              print("Connexion réussie de $mail avec le mot de passe $password et l'id : $id, est-il admin : $admin");
 
                               // Naviguer vers la page EventPage
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => MyApp(initialIndex: 1)),
+                                MaterialPageRoute(builder: (context) => MyApp(initialIndex: 0)),
                               );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(

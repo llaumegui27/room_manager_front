@@ -3,6 +3,7 @@ class UserManager {
   factory UserManager() => _instance;
 
   int? userId; // Utilisez int au lieu de String pour stocker l'ID
+  bool? isAdmin;
 
   UserManager._internal();
 }
