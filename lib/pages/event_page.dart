@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import'user_manager.dart';
 import 'create_room_page.dart';
+import 'update_room_page.dart';
 
 class EventPage extends StatefulWidget {
   const EventPage({Key? key}) : super(key: key);
@@ -123,9 +124,15 @@ class _EventPageState extends State<EventPage> {
                         IconButton(
                           icon: Icon(Icons.edit),
                           onPressed: () {
-                            // Action pour le premier bouton
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UpdateRoomPage(roomId: id),
+                              ),
+                            );
                           },
                         ),
+
                         IconButton(
                           icon: Icon(Icons.delete),
                           onPressed: () {
