@@ -19,6 +19,36 @@ class _EventPageState extends State<EventPage> {
     'Content-Type': 'application/json'
   };
 
+  Future<void> deleteRoom(int roomId) async {
+    final url = Uri.parse("http://10.0.2.2:8000/delete-room/$roomId");
+    final response = await http.delete(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      final bool success = jsonResponse['etat'];
+      final String message = jsonResponse['message'];
+
+      if (success) {
+        setState(() {
+          rooms.removeWhere((room) => room['id'] == roomId);
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Salle supprimée.")),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Échec de la suppression")),
+      );
+    }
+  }
+
+
   @override
   void initState() {
     super.initState();
@@ -56,7 +86,7 @@ class _EventPageState extends State<EventPage> {
                     MaterialPageRoute(builder: (context) => CreateRoomPage()),
                   );
                 },
-                child: Text(
+                child: const Text(
                   'Ajouter une salle',
                   style: TextStyle(fontSize: 18),
                 ),
@@ -64,7 +94,7 @@ class _EventPageState extends State<EventPage> {
             ),
           Expanded(
             child: isLoading
-                ? Center(
+                ? const Center(
               child: SizedBox(
                 width: 40.0, // Définir la largeur du SizedBox
                 height: 40.0, // Définir la hauteur du SizedBox
@@ -75,18 +105,36 @@ class _EventPageState extends State<EventPage> {
               itemCount: rooms.length,
               itemBuilder: (context, index) {
                 final room = rooms[index];
+                final id = room['id'];
                 final name = room['name'];
                 final subject = room['subject'];
                 final places = room['places'];
-                final participants = room['participants'];
+                // final participants = room['participants'];
 
                 return Card(
                   child: ListTile(
                     leading: Image.asset("assets/images/school-logo.png"),
                     title: Text("$name - $subject"),
-                    subtitle: Text(
-                        "Nombre de places : $places - Participants : $participants"),
-                    trailing: Icon(Icons.info),
+                    subtitle: Text("Nombre de places : $places"),
+                    trailing: UserManager().isAdmin == true
+                        ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            // Action pour le premier bouton
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () {
+                            deleteRoom(id);
+                          },
+                        ),
+                      ],
+                    )
+                        : SizedBox.shrink(),
                   ),
                 );
               },
@@ -95,7 +143,6 @@ class _EventPageState extends State<EventPage> {
         ],
       ),
     );
-
 
   }
 }
