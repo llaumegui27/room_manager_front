@@ -35,6 +35,11 @@ class _MyRequestPageState extends State<MyRequestPage> {
       final reservationssData = jsonDecode(response.body);
       setState(() {
         reservations = jsonDecode(response.body);
+        reservations.sort((a, b) {
+          final int idA = a['id'];
+          final int idB = b['id'];
+          return idB.compareTo(idA);
+        });
         isLoading = false;
       });
       print('Récupération des salles réussie : $reservationssData');
@@ -52,6 +57,7 @@ class _MyRequestPageState extends State<MyRequestPage> {
         itemBuilder: (context, index) {
           final dateFormatter = DateFormat('MM/dd/yyyy HH:mm');
           final reservation = reservations[index];
+          final id = reservation['id'];
           final debut = reservation['date_heure_debut'];
           final debutFormatted = dateFormatter.format(DateTime.parse(debut));
           final fin = reservation['date_heure_fin'];
@@ -84,9 +90,6 @@ class _MyRequestPageState extends State<MyRequestPage> {
               ),
             ),
           );
-
-
-
         },
       ),
     );

@@ -90,13 +90,19 @@ class _MyAppState extends State<MyApp> {
                 icon: Icon(Icons.book),
                 label: 'Réservation',
               ),
-              if (UserManager().isAdmin == false)
+              if (UserManager().isAdmin == false) // Ajoutez cette condition
                 BottomNavigationBarItem(
                   icon: Icon(Icons.article),
                   label: 'Mes demandes',
                 ),
+              if (UserManager().isAdmin == true) // Ajoutez cette condition
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.article),
+                  label: 'Liste des demandes',
+                ),
             ],
           ),
+
         ),
       ),
     );
