@@ -113,6 +113,7 @@ class _EventPageState extends State<EventPage> {
                 // final participants = room['participants'];
 
                 return Card(
+                  color: Colors.white60,
                   child: ListTile(
                     leading: Image.asset("assets/images/school-logo.png"),
                     title: Text("$name - $subject"),

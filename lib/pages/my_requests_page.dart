@@ -68,17 +68,17 @@ class _MyRequestPageState extends State<MyRequestPage> {
           if (etat == true) {
             etat = "Accepté";
           } else {
-            etat = "En attente ou refusé";
+            etat = "En attente";
           }
           if (room == null) {
             room = "Salle plus disponible";
           }
           final commentaire = reservation['commentaire'];
           return Card(
-            color: etat == "Accepté" ? Colors.lightGreen.withOpacity(0.8) : Colors.red.withOpacity(0.8),
+            color: etat == "Accepté" ? Colors.lightGreen.withOpacity(0.8) : Colors.orange.withOpacity(0.8),
             child: ListTile(
               leading: Image.asset(
-                etat == "Accepté" ? "assets/images/valide.png" : "assets/images/rejete.png",
+                etat == "Accepté" ? "assets/images/valide.png" : "assets/images/attente.png",
               ),
               title: Text("$etat - $room"),
               subtitle: Column(
