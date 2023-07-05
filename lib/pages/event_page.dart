@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import'user_manager.dart';
+import 'user_manager.dart';
 import 'create_room_page.dart';
 import 'update_room_page.dart';
 
@@ -49,7 +49,6 @@ class _EventPageState extends State<EventPage> {
     }
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -72,85 +71,90 @@ class _EventPageState extends State<EventPage> {
     }
   }
 
+  Future<void> refreshRooms() async {
+    await fetchRooms();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          if (UserManager().isAdmin == true)
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CreateRoomPage()),
-                  );
-                },
-                child: const Text(
-                  'Ajouter une salle',
-                  style: TextStyle(fontSize: 18),
+    return RefreshIndicator(
+      onRefresh: refreshRooms,
+      child: Center(
+        child: Column(
+          children: [
+            if (UserManager().isAdmin == true)
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CreateRoomPage()),
+                    );
+                  },
+                  child: const Text(
+                    'Ajouter une salle',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
               ),
-            ),
-          Expanded(
-            child: isLoading
-                ? const Center(
-              child: SizedBox(
-                width: 40.0, // Définir la largeur du SizedBox
-                height: 40.0, // Définir la hauteur du SizedBox
-                child: CircularProgressIndicator(),
+            Expanded(
+              child: isLoading
+                  ? const Center(
+                child: SizedBox(
+                  width: 40.0,
+                  height: 40.0,
+                  child: CircularProgressIndicator(),
+                ),
+              )
+                  : ListView.builder(
+                itemCount: rooms.length,
+                itemBuilder: (context, index) {
+                  final room = rooms[index];
+                  final id = room['id'];
+                  final name = room['name'];
+                  final subject = room['subject'];
+                  final places = room['places'];
+
+                  return Card(
+                    color: Colors.white60,
+                    child: ListTile(
+                      leading: Image.asset("assets/images/school-logo.png"),
+                      title: Text("$name - $subject"),
+                      subtitle: Text("Nombre de places : $places"),
+                      trailing: UserManager().isAdmin == true
+                          ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      UpdateRoomPage(roomId: id),
+                                ),
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              deleteRoom(id);
+                            },
+                          ),
+                        ],
+                      )
+                          : SizedBox.shrink(),
+                    ),
+                  );
+                },
               ),
-            )
-                : ListView.builder(
-              itemCount: rooms.length,
-              itemBuilder: (context, index) {
-                final room = rooms[index];
-                final id = room['id'];
-                final name = room['name'];
-                final subject = room['subject'];
-                final places = room['places'];
-                // final participants = room['participants'];
-
-                return Card(
-                  color: Colors.white60,
-                  child: ListTile(
-                    leading: Image.asset("assets/images/school-logo.png"),
-                    title: Text("$name - $subject"),
-                    subtitle: Text("Nombre de places : $places"),
-                    trailing: UserManager().isAdmin == true
-                        ? Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => UpdateRoomPage(roomId: id),
-                              ),
-                            );
-                          },
-                        ),
-
-                        IconButton(
-                          icon: Icon(Icons.delete),
-                          onPressed: () {
-                            deleteRoom(id);
-                          },
-                        ),
-                      ],
-                    )
-                        : SizedBox.shrink(),
-                  ),
-                );
-              },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
-
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:room_manager/pages/update_user_page.dart';
 import 'dart:convert';
 import 'user_manager.dart';
 
@@ -11,7 +12,6 @@ class UsersPage extends StatefulWidget {
 }
 
 class _UsersPageState extends State<UsersPage> {
-
   List<dynamic> users = [];
   bool isLoading = true;
 
@@ -34,7 +34,7 @@ class _UsersPageState extends State<UsersPage> {
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Utilisateur supprimée.")),
+          const SnackBar(content: Text("Utilisateur supprimé.")),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -45,6 +45,22 @@ class _UsersPageState extends State<UsersPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Échec de la suppression")),
       );
+    }
+  }
+
+  Future<void> updateUser(int userId) async {
+    final updatedUser = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UpdateUserPage(userId: userId),
+      ),
+    );
+
+    if (updatedUser != null) {
+      setState(() {
+        final index = users.indexWhere((user) => user['id'] == userId);
+        users[index] = updatedUser;
+      });
     }
   }
 
@@ -61,69 +77,80 @@ class _UsersPageState extends State<UsersPage> {
     if (response.statusCode == 200) {
       final usersData = jsonDecode(response.body);
       setState(() {
-        users = jsonDecode(response.body);
+        users = usersData;
         isLoading = false;
       });
-      print('Récupération des users réussie : $usersData');
+      print('Récupération des utilisateurs réussie : $usersData');
     } else {
       print('Erreur : ${response.body}');
     }
   }
 
+  Future<void> refreshUsers() async {
+    await fetchUsers();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: isLoading
-          ? CircularProgressIndicator()
-          : ListView.builder(
-        itemCount: users.length,
-        itemBuilder: (context, index) {
-          final user = users[index];
-          final id = user['id'];
-          final name = user["name"];
-          final mail = user['mail'];
-          var teacher = user['teacher'];
-          var admin = user['admin'];
-          var role = "";
-          admin == true ? role = "Administrateur" : role = "Professeur";
+    return RefreshIndicator(
+      onRefresh: refreshUsers,
+      child: Center(
+        child: isLoading
+            ? CircularProgressIndicator()
+            : ListView.builder(
+          itemCount: users.length,
+          itemBuilder: (context, index) {
+            final user = users[index];
+            final id = user['id'];
+            final name = user["name"];
+            final mail = user['mail'];
+            var teacher = user['teacher'];
+            var admin = user['admin'];
+            var role = "";
+            admin == true ? role = "Administrateur" : role = "Professeur";
 
-          final bool isAdmin = admin == true && UserManager().userId != id;
-          final bool isCurrentUser = admin == true &&
-              UserManager().userId == id;
+            final bool isAdmin =
+                admin == true && UserManager().userId != id;
+            final bool isCurrentUser =
+                admin == true && UserManager().userId == id;
 
-          return Card(
-            color: id != UserManager().userId ? Colors.white60 : Colors.tealAccent,
-            child: ListTile(
-              leading: Image.asset("assets/images/avatar.png"),
-              title: Text("$name"),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Mail : $mail"),
-                  Text("Rôle : $role"),
-                ],
+            return Card(
+              color: id != UserManager().userId
+                  ? Colors.white60
+                  : Colors.tealAccent,
+              child: ListTile(
+                leading: Image.asset("assets/images/avatar.png"),
+                title: Text("$name"),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Mail : $mail"),
+                    Text("Rôle : $role"),
+                  ],
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (!isAdmin)
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          updateUser(id);
+                        },
+                      ),
+                    if (!isAdmin && !isCurrentUser)
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          deleteUser(id);
+                        },
+                      ),
+                  ],
+                ),
               ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (!isAdmin)
-                    IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: () {
-                      },
-                    ),
-                  if (!isAdmin && !isCurrentUser)
-                    IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        deleteUser(id);
-                      },
-                    ),
-                ],
-              ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
