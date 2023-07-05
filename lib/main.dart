@@ -5,6 +5,7 @@ import 'package:room_manager/pages/reservation_page.dart';
 import 'package:room_manager/pages/request_room_page.dart';
 import 'package:room_manager/pages/user_manager.dart';
 import 'package:room_manager/pages/my_requests_page.dart';
+import 'package:room_manager/pages/users_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -54,6 +55,7 @@ class _MyAppState extends State<MyApp> {
               const Text("Liste des salles"),
               const Text("Demande de réservation de salles"),
               if (UserManager().isAdmin == true) const Text("Liste des demandes"),
+              if (UserManager().isAdmin == true) const Text("Liste des utilisateurs"),
               if (UserManager().isAdmin == false) const Text("Mes demandes")
             ][_currentIndex],
             actions: [
@@ -71,6 +73,7 @@ class _MyAppState extends State<MyApp> {
             EventPage(),
             ReservationPage(),
             if (UserManager().isAdmin == true) RequestRoomPage(),
+            if (UserManager().isAdmin == true) UsersPage(),
             if (UserManager().isAdmin == false) MyRequestPage()
           ][_currentIndex],
           bottomNavigationBar: BottomNavigationBar(
@@ -90,15 +93,20 @@ class _MyAppState extends State<MyApp> {
                 icon: Icon(Icons.book),
                 label: 'Réservation',
               ),
-              if (UserManager().isAdmin == false) // Ajoutez cette condition
+              if (UserManager().isAdmin == false)
                 BottomNavigationBarItem(
                   icon: Icon(Icons.article),
                   label: 'Mes demandes',
                 ),
-              if (UserManager().isAdmin == true) // Ajoutez cette condition
+              if (UserManager().isAdmin == true)
                 BottomNavigationBarItem(
                   icon: Icon(Icons.article),
-                  label: 'Liste des demandes',
+                  label: 'Les demandes',
+                ),
+              if (UserManager().isAdmin == true)
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.people),
+                  label: 'Utilistateurs',
                 ),
             ],
           ),

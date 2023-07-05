@@ -103,7 +103,8 @@ class _RequestRoomPageState extends State<RequestRoomPage> {
           }
           final commentaire = reservation['commentaire'];
           return Card(
-            color: etat ? Colors.lightGreen.withOpacity(0.8) : Colors.white60,            child: ListTile(
+            color: etat ? Colors.lightGreen.withOpacity(0.8) : Colors.white60,
+            child: ListTile(
               leading: Image.asset("assets/images/juge.png"),
               title: Text("$name - $room"),
               subtitle: Column(
