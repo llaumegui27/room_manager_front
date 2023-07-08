@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:room_manager/pages/user_manager.dart';
+import  'api_url.dart';
 
 class MyRequestPage extends StatefulWidget {
   const MyRequestPage({Key? key}) : super(key: key);
@@ -28,7 +29,7 @@ class _MyRequestPageState extends State<MyRequestPage> {
 
   Future<void> fetchRequests() async {
     final id = UserManager().userId;
-    final url = Uri.parse("http://10.0.2.2:8000/user/$id/reservations");
+    final url = Uri.parse("$apiBaseUrl/user/$id/reservations");
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {

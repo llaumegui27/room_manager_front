@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:room_manager/pages/update_user_page.dart';
 import 'dart:convert';
 import 'user_manager.dart';
+import 'api_url.dart';
 
 class UsersPage extends StatefulWidget {
   const UsersPage({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class _UsersPageState extends State<UsersPage> {
   };
 
   Future<void> deleteUser(int userId) async {
-    final url = Uri.parse("http://10.0.2.2:8000/delete-user/$userId");
+    final url = Uri.parse("$apiBaseUrl/delete-user/$userId");
     final response = await http.delete(url, headers: headers);
 
     if (response.statusCode == 200) {
@@ -71,7 +72,7 @@ class _UsersPageState extends State<UsersPage> {
   }
 
   Future<void> fetchUsers() async {
-    final url = Uri.parse("http://10.0.2.2:8000/users");
+    final url = Uri.parse("$apiBaseUrl/users");
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {

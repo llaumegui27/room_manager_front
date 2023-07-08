@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'api_url.dart';
 
 class UpdateRoomPage extends StatefulWidget {
   final int roomId;
@@ -23,7 +24,7 @@ class _UpdateRoomPageState extends State<UpdateRoomPage> {
   }
 
   Future<void> fetchOneRoom(String roomId) async {
-    final url = Uri.parse("http://10.0.2.2:8000/room/$roomId");
+    final url = Uri.parse("$apiBaseUrl/room/$roomId");
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {
@@ -142,7 +143,7 @@ class _UpdateRoomPageState extends State<UpdateRoomPage> {
                         final subject = subjectController.text;
                         final places = int.parse(placeController.text);
 
-                        final url = Uri.parse("http://10.0.2.2:8000/update-room/${widget.roomId}");
+                        final url = Uri.parse("$apiBaseUrl/update-room/${widget.roomId}");
                         var body = jsonEncode(
                             {
                               "name": room,

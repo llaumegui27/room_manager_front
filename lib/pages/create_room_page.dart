@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'api_url.dart';
 
 class CreateRoomPage extends StatefulWidget {
   const CreateRoomPage({Key? key}) : super(key: key);
@@ -93,7 +94,7 @@ class _CreateRoomPageState extends State<CreateRoomPage> {
                         final subject = subjectController.text;
                         final places = int.parse(placeController.text);
 
-                        final url = Uri.parse("http://10.0.2.2:8000/add-room");
+                        final url = Uri.parse("$apiBaseUrl/add-room");
                         var body = jsonEncode(
                             {
                               "name": room,

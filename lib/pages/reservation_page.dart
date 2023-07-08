@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'user_manager.dart';
+import 'api_url.dart';
 
 class ReservationPage extends StatefulWidget {
   const ReservationPage({Key? key}) : super(key: key);
@@ -42,7 +43,7 @@ class _ReservationPageState extends State<ReservationPage> {
   }
 
   Future<void> fetchRooms() async {
-    final url = Uri.parse("http://10.0.2.2:8000/rooms");
+    final url = Uri.parse("$apiBaseUrl/rooms");
     final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       final roomsData = jsonDecode(response.body);
@@ -151,7 +152,7 @@ class _ReservationPageState extends State<ReservationPage> {
                         final commentaire = commentaireController.text;
                         final etat = 0;
 
-                        final url = Uri.parse("http://10.0.2.2:8000/add-reservation");
+                        final url = Uri.parse("$apiBaseUrl/add-reservation");
                         var body = jsonEncode(
                             {
                               "date_heure_debut": debut == null ? null : debut.toIso8601String(),

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'user_manager.dart';
 import 'create_room_page.dart';
 import 'update_room_page.dart';
+import 'api_url.dart';
 
 class EventPage extends StatefulWidget {
   const EventPage({Key? key}) : super(key: key);
@@ -21,7 +22,7 @@ class _EventPageState extends State<EventPage> {
   };
 
   Future<void> deleteRoom(int roomId) async {
-    final url = Uri.parse("http://10.0.2.2:8000/delete-room/$roomId");
+    final url = Uri.parse("$apiBaseUrl/delete-room/$roomId");
     final response = await http.delete(url, headers: headers);
 
     if (response.statusCode == 200) {
@@ -56,7 +57,7 @@ class _EventPageState extends State<EventPage> {
   }
 
   Future<void> fetchRooms() async {
-    final url = Uri.parse("http://10.0.2.2:8000/rooms");
+    final url = Uri.parse("$apiBaseUrl/rooms");
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {

@@ -3,6 +3,7 @@ import 'user_manager.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'api_url.dart';
 
 class RequestRoomPage extends StatefulWidget {
   const RequestRoomPage({Key? key}) : super(key: key);
@@ -27,7 +28,7 @@ class _RequestRoomPageState extends State<RequestRoomPage> {
 
   Future<void> fetchRequests() async {
     final id = UserManager().userId;
-    final url = Uri.parse("http://10.0.2.2:8000/reservations");
+    final url = Uri.parse("$apiBaseUrl/reservations");
     final response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {
@@ -48,7 +49,7 @@ class _RequestRoomPageState extends State<RequestRoomPage> {
   }
 
   Future<void> rejectRequest(int id) async {
-    final url = Uri.parse("http://10.0.2.2:8000/delete-reservation/$id");
+    final url = Uri.parse("$apiBaseUrl/delete-reservation/$id");
     final response = await http.delete(url, headers: headers);
 
     if (response.statusCode == 200) {
@@ -131,7 +132,7 @@ class _RequestRoomPageState extends State<RequestRoomPage> {
                       color: Colors.green,
                       onPressed: () async {
                         final url = Uri.parse(
-                            "http://10.0.2.2:8000/update-reservation/$id");
+                            "$apiBaseUrl/update-reservation/$id");
                         var body = jsonEncode({
                           "date_heure_debut": debut,
                           "date_heure_fin": fin,

@@ -4,8 +4,7 @@ import 'package:room_manager/pages/sign_in_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'user_manager.dart';
-import 'event_page.dart';
-
+import 'api_url.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -97,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                           final mail = mailController.text;
                           final password = passwordController.text;
 
-                          final url = Uri.parse("http://10.0.2.2:8000/login");
+                          final url = Uri.parse("$apiBaseUrl/login");
                           var body = jsonEncode({"mail": mail, "password": password});
                           final response = await http.post(
                             url,
