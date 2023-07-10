@@ -23,31 +23,15 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int _currentIndex = 0;
 
-  setCurrentIndex(int index) {
-    print(index);
-    print(_currentIndex);
-    setState(() {
-      if (widget.initialIndex != _currentIndex) {
-        print(index);
-        _currentIndex = widget.initialIndex;
-      } else {
-        print(index);
-        _currentIndex = index;
-      }
-      print(_currentIndex);
-    });
-  }
-
   @override
   void initState() {
-    setCurrentIndex(_currentIndex);
+    _currentIndex = widget.initialIndex;
     super.initState();
     print("l'index : $_currentIndex");
   }
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       home: Builder(
         builder: (context) => Scaffold(
@@ -79,7 +63,11 @@ class _MyAppState extends State<MyApp> {
           ][_currentIndex],
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: _currentIndex,
-            onTap: (index) => setCurrentIndex(index),
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
             type: BottomNavigationBarType.fixed,
             selectedItemColor: Colors.blue,
             unselectedItemColor: Colors.grey,
@@ -111,7 +99,6 @@ class _MyAppState extends State<MyApp> {
                 ),
             ],
           ),
-
         ),
       ),
     );
