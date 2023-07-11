@@ -66,7 +66,6 @@ class _EventPageState extends State<EventPage> {
         rooms = jsonDecode(response.body);
         isLoading = false;
       });
-      print('Récupération des salles réussie : $roomsData');
     } else {
       print('Erreur : ${response.body}');
     }

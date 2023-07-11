@@ -19,7 +19,6 @@ class _UpdateRoomPageState extends State<UpdateRoomPage> {
   @override
   void initState() {
     super.initState();
-    print("Room ID: ${widget.roomId}");
     fetchOneRoom(widget.roomId.toString());
   }
 
@@ -54,7 +53,6 @@ class _UpdateRoomPageState extends State<UpdateRoomPage> {
           placeController.text = roomData['places'].toString();
         }
       }
-      print('Récupération de la salle réussie : $roomData');
     } else {
       print('Erreur : ${response.body}');
     }
@@ -165,8 +163,6 @@ class _UpdateRoomPageState extends State<UpdateRoomPage> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text("Modification enregistré.")),
                             );
-                            print("Modification enregistré");
-                            // Effectuez d'autres actions, par exemple, naviguez vers une autre page
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(message)),
@@ -176,7 +172,6 @@ class _UpdateRoomPageState extends State<UpdateRoomPage> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Échec de la modification de la salle.")),
                           );
-                          print("Échec de la modification de la salle");
                         }
                         FocusScope.of(context).requestFocus(FocusNode());
                       }

@@ -117,8 +117,6 @@ class _LoginPageState extends State<LoginPage> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text("Connexion réussie.")),
                               );
-                              print("Connexion réussie de $mail avec le mot de passe $password et l'id : $id, est-il admin : $admin");
-
                               // Naviguer vers la page EventPage
                               Navigator.push(
                                 context,
@@ -133,7 +131,6 @@ class _LoginPageState extends State<LoginPage> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text("Utilisateur introuvable.")),
                             );
-                            print("Connexion échouée $mail avec le mot de passe $password");
                           }
                           FocusScope.of(context).requestFocus(FocusNode());
                         }

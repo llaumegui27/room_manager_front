@@ -116,7 +116,6 @@ class _CreateRoomPageState extends State<CreateRoomPage> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text("Salle enregistré.")),
                             );
-                            print("Salle enregistré");
                             // Effectuez d'autres actions, par exemple, naviguez vers une autre page
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -127,7 +126,6 @@ class _CreateRoomPageState extends State<CreateRoomPage> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Échec de l'ajout de la salle.")),
                           );
-                          print("Échec de l'ajout de la salle");
                         }
                         FocusScope.of(context).requestFocus(FocusNode());
 

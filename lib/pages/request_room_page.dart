@@ -42,7 +42,6 @@ class _RequestRoomPageState extends State<RequestRoomPage> {
         });
         isLoading = false;
       });
-      print('Récupération des salles réussie : $reservationssData');
     } else {
       print('Erreur : ${response.body}');
     }

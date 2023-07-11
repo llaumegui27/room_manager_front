@@ -59,7 +59,6 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
 
         }
       }
-      print('Récupération de la salle réussie : $userData');
     } else {
       print('Erreur : ${response.body}');
     }
@@ -187,8 +186,6 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                               content: Text("Modification enregistrée."),
                             ),
                           );
-                          print("Modification enregistrée et pwd $password");
-                          // Effectuez d'autres actions, par exemple, naviguez vers une autre page
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text(message)),
@@ -200,7 +197,6 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                             content: Text("Échec de la modification de l'utilisateur."),
                           ),
                         );
-                        print("Échec de la modification de l'utilisateur");
                       }
 
                       FocusScope.of(context).requestFocus(FocusNode());

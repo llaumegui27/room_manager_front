@@ -38,8 +38,6 @@ class _ReservationPageState extends State<ReservationPage> {
   void initState() {
     super.initState();
     fetchRooms();
-    print("L'id de mon user : ");
-    print(UserManager().userId);
   }
 
   Future<void> fetchRooms() async {
@@ -50,7 +48,6 @@ class _ReservationPageState extends State<ReservationPage> {
       setState(() {
         rooms = roomsData;
       });
-      print('Récupération des salles réussie : $roomsData');
     } else {
       // Gérer l'erreur de la requête
       print('Erreur : ${response.body}');
@@ -176,8 +173,6 @@ class _ReservationPageState extends State<ReservationPage> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text("Réservation enregistré.")),
                             );
-                            print("Réservation enregistré");
-                            // Effectuez d'autres actions, par exemple, naviguez vers une autre page
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(message)),
@@ -187,18 +182,12 @@ class _ReservationPageState extends State<ReservationPage> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Réservation échouée.")),
                           );
-                          print("Réservation échouée");
                         }
                         FocusScope.of(context).requestFocus(FocusNode());
-
-                        print("L'id de la salle : $selectSalle");
-                        print("Date et heure du début du cours : $selectedDateDebut");
-                        print("Date et heure de fin du cours : $selectedDateFin");
-                        print("Le commentaire : $commentaire");
-
                       }
                     },
-                    child: Text("Envoyer")),
+                    child: Text("Envoyer")
+                ),
               )
             ],
           )

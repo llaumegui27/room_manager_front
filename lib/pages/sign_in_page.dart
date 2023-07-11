@@ -163,8 +163,6 @@ class _SignInPageState extends State<SignInPage> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text("Inscription réussie.")),
                               );
-                              print("Connexion réussi de $mail avec le mdp $password");
-                              // Effectuez d'autres actions, par exemple, naviguez vers une autre page
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(message)),
@@ -174,7 +172,6 @@ class _SignInPageState extends State<SignInPage> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text("Inscription échoué.")),
                             );
-                            print("Inscriptio échoué $name, $mail avec le mdp $password");
                           }
                           FocusScope.of(context).requestFocus(FocusNode());
                         }

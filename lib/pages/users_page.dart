@@ -81,7 +81,6 @@ class _UsersPageState extends State<UsersPage> {
         users = usersData;
         isLoading = false;
       });
-      print('Récupération des utilisateurs réussie : $usersData');
     } else {
       print('Erreur : ${response.body}');
     }
